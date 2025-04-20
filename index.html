@@ -6,6 +6,11 @@
     <title>Ride Hailing App</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#ff5f57">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
   <style>
   * {
     margin: 0;
@@ -219,7 +224,22 @@ body {
   }
 
   </style>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+          .then(registration => {
+            console.log("ServiceWorker registered:", registration);
+          })
+          .catch(error => {
+            console.log("ServiceWorker registration failed:", error);
+          });
+      });
+    }
+  </script>
 </head>
+
+ 
 <body>
     <div class="map-section">
         <div id="map"></div>
