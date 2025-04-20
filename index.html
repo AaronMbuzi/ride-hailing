@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ride Hailing App</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
+  <style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+.map-section {
+    position: relative;
+    height: 300px;
+    background-color: #ddd;
+}
+
+.map-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.time-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #ff5f57;
+    color: white;
+    padding: 8px;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+.trip-section {
+    background-color: white;
+    padding: 20px;
+    margin-top: -20px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+h2 {
+    margin-bottom: 15px;
+}
+
+.pickup, .destination {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.pickup img {
+    width: 25px;
+    height: 25px;
+    margin-right: 10px;
+}
+
+.destination p {
+    color: gray;
+    margin-bottom: 5px;
+}
+
+.ride-options {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.option {
+    background-color: #e9e9e9;
+    border: none;
+    padding: 15px;
+    text-align: center;
+    width: 22%;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.option.active {
+    background-color: #d4f6c1;
+    font-weight: bold;
+}
+
+.request-section {
+    padding: 20px;
+    background-color: white;
+    text-align: center;
+}
+
+.request-btn {
+    background-color: #ff5f57;
+    color: white;
+    border: none;
+    padding: 15px;
+    width: 100%;
+    border-radius: 10px;
+    font-size: 18px;
+}
+
+  .map-section {
+    position: relative;
+    height: 300px;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}
+
+.time-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #ff5f57;
+    color: white;
+    padding: 8px;
+    border-radius: 50%;
+    font-weight: bold;
+}
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+#map {
+    height: 50vh; /* Half of the viewport height */
+    width: 100%;
+}
+
+.trip-info {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px 10px 0 0;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.trip-info h2 {
+    margin: 0 0 15px;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.trip-input {
+    margin-bottom: 15px;
+}
+
+.trip-input label {
+    font-size: 1em;
+    display: block;
+    margin-bottom: 5px;
+    color: #444;
+}
+
+.trip-input img {
+    width: 20px;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+.trip-input input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+.request-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #ff5733;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.request-btn:hover {
+    background-color: #ff3c1a;
+}
+
+#map {
+    height: 40vh; /* Reduced height to give more space for other elements */
+    width: 100%;
+}
+#splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #splash-screen img {
+    width: 150px;
+    height: auto;
+  }
+
+  </style>
+</head>
+<body>
+    <div class="map-section">
+        <div id="map"></div>
+        <div class="time-badge">6 min</div>
+    </div>
+
+    <div id="splash-screen">
+        <img src="car.png" alt="Splash Image">
+      </div>
+
+    <div class="trip-section">
+        <h2>Your Trip</h2>
+        <div class="trip-input">
+            <label for="pickup"><img src="https://img.icons8.com/color/48/marker.png" alt="pickup-icon" /> Pickup</label>
+            <input type="text" id="pickup" placeholder="Cross roads boarding house">
+        </div>
+
+        <!-- Destination Input Field -->
+        <div class="trip-input">
+            <label for="destination"><img src="https://img.icons8.com/ios/50/finish-flag.png" alt="destination-icon" /> Destination</label>
+            <input type="text" id="destination" placeholder="University of Zambia">
+        </div>
+      
+        <div class="ride-options">
+            <button class="option active">Economy <br> K53</button>
+            <button class="option">Comfort <br> ~K79</button>
+            <button class="option">Comfort+ <br> ~K77</button>
+            <button class="option">The Fastest <br> from K50</button>
+        </div>
+    </div>
+
+    <div class="request-section">
+        <button class="request-btn">Request Ride</button>
+    </div>
+      
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+ // Initialize the map using Leaflet.js
+var map = L.map('map').setView([-15.3875, 28.3228], 14); // Center the map on Lusaka, Zambia
+
+// Set up the OpenStreetMap tiles
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+}).addTo(map);
+
+// Add a marker to indicate the pickup location
+var marker = L.marker([-15.3875, 28.3228]).addTo(map)
+    .bindPopup('Pickup Location')
+    .openPopup();
+
+// Define the bounds for random car placement (visible area of the map)
+var bounds = map.getBounds();
+
+// Custom icon for cars using the Icons8 link
+var carIcon = L.icon({
+    iconUrl: 'https://img.icons8.com/color/48/car-top-view.png', // Using the Icons8 URL
+    iconSize: [40, 30], // Size of the icon
+    iconAnchor: [20, 20], // Point of the icon which will correspond to marker's location
+    popupAnchor: [0, -20] // Point from which the popup should open relative to the iconAnchor
+});
+
+// Function to place cars randomly on the map
+function placeRandomCars(numCars) {
+    for (let i = 0; i < numCars; i++) {
+        // Generate random latitude and longitude within the current bounds
+        var lat = bounds.getSouthWest().lat + Math.random() * (bounds.getNorthEast().lat - bounds.getSouthWest().lat);
+        var lng = bounds.getSouthWest().lng + Math.random() * (bounds.getNorthEast().lng - bounds.getSouthWest().lng);
+
+        // Add a car marker to the map at the random position
+        L.marker([lat, lng], { icon: carIcon }).addTo(map)
+            .bindPopup('Car ' + (i + 1))
+            .openPopup();
+    }
+}
+
+// Place 5-10 random cars on the map
+placeRandomCars(Math.floor(Math.random() * 6) + 5); // Random number between 5 and 10
+
+
+  </script>
+  <script src="splashscreen.js"></script>
+  
+</body>
+</html>
