@@ -226,16 +226,12 @@ body {
   </style>
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js')
-          .then(registration => {
-            console.log("ServiceWorker registered:", registration);
-          })
-          .catch(error => {
-            console.log("ServiceWorker registration failed:", error);
-          });
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('service-worker.js').then(reg => {
+        console.log('Service worker registered.', reg);
       });
-    }
+    });
+  }
   </script>
 </head>
 
@@ -322,6 +318,7 @@ placeRandomCars(Math.floor(Math.random() * 6) + 5); // Random number between 5 a
 
   </script>
   <script src="splashscreen.js"></script>
+  <script src="install.js"></script>
   
 </body>
 </html>
